@@ -3,6 +3,7 @@ import generator from 'generate-password'
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import asyncHandler from "express-async-handler";
+import nodemailer from "nodemailer";
 
 export const createUser = asyncHandler(async (req, res) => {
   const { sub } = req.body;
@@ -37,6 +38,39 @@ export const createUser = asyncHandler(async (req, res) => {
         res.status(500).json({ message: err.message });
       }
     }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+export const sendSOS = asyncHandler(async (req, res) => {
+  try {
+    let testAccount = await nodemailer.createTestAccount();
+
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      auth: {
+          user: 'dario.bechtelar83@ethereal.email',
+          pass: 'Tb85A4rZwrSSAEVuUg'
+      }
+    });
+
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+      from: '"Wikus du Plessis" <wikus@example.com>', // sender address
+      to: "simplexityza@gmail.com",
+      subject: "SOS Alert", // Subject line
+      text: "SOS Alert", // plain text body
+      html: "<b>SOS Alert</b>" // html body
+    });
+
+    console.log("Message sent: %s", info.messageId);
+
+    res.status(200).json({
+      success: true,
+    });
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
