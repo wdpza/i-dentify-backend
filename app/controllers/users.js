@@ -43,22 +43,66 @@ export const createUser = asyncHandler(async (req, res) => {
   }
 });
 
-export const sendSOS = asyncHandler(async (req, res) => {
-  try {
-    let testAccount = await nodemailer.createTestAccount();
+export const sendSosContactNotifications = asyncHandler(async (req, res) => {
 
+  console.log(req)
+
+  try {
     let transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
+      pool: true,
+      host: 'mail.i-dentify.co.za',
       port: 587,
       auth: {
-          user: 'dario.bechtelar83@ethereal.email',
-          pass: 'Tb85A4rZwrSSAEVuUg'
-      }
+          user: 'server@i-dentify.co.za',
+          pass: 'MythicGradsJuicyQua12'
+      },
+      tls: {
+          rejectUnauthorized: false
+      },
     });
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-      from: '"Wikus du Plessis" <wikus@example.com>', // sender address
+      from: '"I-Dentify" <server@i-dentify.co.za>', // sender address
+      to: "simplexityza@gmail.com",
+      subject: "", // Subject line
+      text: "SOS Alert", // plain text body
+      html: "<b>SOS Alert</b>" // html body
+    });
+
+    console.log("Message sent: %s", info.messageId);
+
+    res.status(200).json({
+      success: true,
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+export const sendSOS = asyncHandler(async (req, res) => {
+
+  console.log(req.body)
+
+  try {
+
+    let transporter = nodemailer.createTransport({
+      pool: true,
+      host: 'mail.i-dentify.co.za',
+      port: 587,
+      auth: {
+          user: 'server@i-dentify.co.za',
+          pass: 'MythicGradsJuicyQua12'
+      },
+      tls: {
+          rejectUnauthorized: false
+      },
+    });
+
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+      from: '"I-Dentify" <server@i-dentify.co.za>', // sender address
       to: "simplexityza@gmail.com",
       subject: "SOS Alert", // Subject line
       text: "SOS Alert", // plain text body
@@ -155,37 +199,6 @@ export const sendUserNotifications = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-  /*
-  const subject = 'Welcome to the app!';
-  const text = `Hello ${name}, welcome to the app!`;
-  const html = `<h1>Hello ${name}, welcome to the app!</h1>`;
-  */
-
-  /*
-  const mailOptions = {
-    from: 'Epresense',
-    to: email,
-    subject: subject,
-    text: text,
-    html: html
-  };
-
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
-  });
-
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log('Email sent: ' + info.response);
-    }
-  });
-  */
 }
 
 export const getUserByQrCode = async (req, res) => {
