@@ -1,16 +1,50 @@
-import express from "express";
+import express from "express"
 
-import { getQRCode, getQRCodes, createQRCode, confirmQRCode, getQRCodesBySub } from "../controllers/qrcodes.js";
+import { getQRCode, getQRCodes, createQRCode, getQRCodesBySub, updateQRCode } from "../controllers/qrcodes.js";
 
-const router = express.Router();
+const router = express.Router()
 
-// GET
-router.get("/", getQRCodes);
-router.get("/:uid", getQRCode);
-router.get("/user/:sub", getQRCodesBySub)
+/**
+ * @api {get} /qr Get all qrcodes
+ * @apiName getQRCodes
+ * @apiGroup QRCodes
+ * @apiVersion 1.0.0
+ */
+router.get("/", getQRCodes)
 
-// POST
-router.post("/create", createQRCode);
-router.post("/:uid/confirm", confirmQRCode);
+/**
+ * @api {get} /qr/:sub Get qrcodes by sub
+ * @apiName getQRCodesBySub
+ * @apiGroup QRCodes
+ * @apiVersion 1.0.0
+ * @auth true [todo: add authentication]
+ */
+router.get("/sub/:sub", getQRCodesBySub)
 
-export default router;
+/**
+ * @api {get} /qr/:uid Get qrcode by uid
+ * @apiName getQRCode
+ * @apiGroup QRCodes
+ * @apiVersion 1.0.0
+ * @auth true [todo: add authentication]
+ */
+router.get("/uid/:uid", getQRCode)
+
+/**
+ * @api {post} /qr/create Create qrcode
+ * @apiName createQRCode
+ * @apiGroup QRCodes
+ * @apiVersion 1.0.0
+ * @auth true [todo: add authentication]
+ */
+router.post("/create", createQRCode)
+
+/**
+ * @api {post} /qr/update Update qrcode
+ * @apiName updateQRCode
+ * @apiGroup QRCodes
+ * @apiVersion 1.0.0
+ */
+router.post("/:uid/update", updateQRCode)
+
+export default router

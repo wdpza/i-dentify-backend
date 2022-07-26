@@ -1,10 +1,57 @@
 import User from "../models/User.js";
-import generator from 'generate-password'
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
 import asyncHandler from "express-async-handler";
 import nodemailer from "nodemailer";
 
+/**
+ * @api {get} /users Get all users
+ * @apiName GetUsers
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ * @auth true [todo: add authentication]
+ */
+export const getUsers = async (req, res) => {
+  try {
+    const users = await User.find()
+
+    console.log(users)
+
+    res.status(200).json({
+      success: true,
+      data: users
+    })
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+}
+
+/**
+ * @api {get} /users/:sub Get user by sub
+ * @apiName GetUserBySub
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ * @auth true [todo: add authentication]
+ */
+export const getUserBySub = async (req, res) => {
+  try {
+    const user = await User.findOne({ sub: req.params.sub });
+
+    console.log(user)
+
+    res.status(200).json({
+      success: true,
+      data: user
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
+/**
+ * @api {post} /users Create user
+ * @apiName CreateUser
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ */
 export const createUser = asyncHandler(async (req, res) => {
   const { sub } = req.body;
   if(!sub) {
@@ -43,9 +90,15 @@ export const createUser = asyncHandler(async (req, res) => {
   }
 });
 
-export const sendSosContactNotifications = asyncHandler(async (req, res) => {
+/**
+ * @api {post} /users/:sub/:contactId Send SOS contact a notification
+ * @apiName sendSosContactNotification
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ */
+export const sendSosContactNotification = asyncHandler(async (req, res) => {
 
-  console.log(req)
+  const { sub } = req.params;
 
   try {
     let transporter = nodemailer.createTransport({
@@ -79,8 +132,14 @@ export const sendSosContactNotifications = asyncHandler(async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-});
+})
 
+/**
+ * @api {post} /users/:sub/sos Send SOS
+ * @apiName SendSOS
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ */
 export const sendSOS = asyncHandler(async (req, res) => {
 
   console.log(req.body)
@@ -120,32 +179,9 @@ export const sendSOS = asyncHandler(async (req, res) => {
   }
 });
 
-export const getUser = async (req, res) => {
-  try {
-    const user = await User.findOne({ qrCode: req.params.qrCode });
-
-    res.status(200).json({
-      success: true,
-      data: user
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-}
-
-export const getUsers = async (req, res) => {
-  try {
-    const users = await User.find();
-
-    res.status(200).json({
-      success: true,
-      data: users
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-}
-
+/**
+ * @api {post} /users/:sub/sos Send SOS
+ */
 export const updateUser = async (req, res) => {
   try {
     const user = await User.findOne({ qrCode: req.params.qrCode });
@@ -214,15 +250,3 @@ export const getUserByQrCode = async (req, res) => {
   }
 }
 
-export const getUserBySub = async (req, res) => {
-  try {
-    const user = await User.findOne({ sub: req.params.sub });
-
-    res.status(200).json({
-      success: true,
-      data: user
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-}
