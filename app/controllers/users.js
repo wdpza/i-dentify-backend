@@ -9,7 +9,7 @@ import nodemailer from "nodemailer";
  * @apiVersion 1.0.0
  * @auth true [todo: add authentication]
  */
-export const getUsers = async (req, res) => {
+export const getUsers = asyncHandler( async (req, res) => {
   try {
     const users = await User.find()
 
@@ -22,16 +22,17 @@ export const getUsers = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message })
   }
-}
+})
 
 /**
+ * @function getUserBySub
  * @api {get} /users/:sub Get user by sub
  * @apiName GetUserBySub
  * @apiGroup Users
  * @apiVersion 1.0.0
  * @auth true [todo: add authentication]
  */
-export const getUserBySub = async (req, res) => {
+export const getUserBySub = asyncHandler( async (req, res) => {
   try {
     const user = await User.findOne({ sub: req.params.sub });
 
@@ -44,13 +45,14 @@ export const getUserBySub = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-}
+});
 
 /**
  * @api {post} /users Create user
  * @apiName CreateUser
  * @apiGroup Users
  * @apiVersion 1.0.0
+ * @param {String} name User name
  */
 export const createUser = asyncHandler(async (req, res) => {
   const { sub } = req.body;
@@ -182,7 +184,7 @@ export const sendSOS = asyncHandler(async (req, res) => {
 /**
  * @api {post} /users/:sub/sos Send SOS
  */
-export const updateUser = async (req, res) => {
+export const updateUser = asyncHandler( async (req, res) => {
   try {
     const user = await User.findOne({ qrCode: req.params.qrCode });
 
@@ -210,9 +212,9 @@ export const updateUser = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-}
+})
 
-export const sendUserNotifications = async (req, res) => {
+export const sendUserNotifications = asyncHandler( async (req, res) => {
   try {
     const user = await User.findOne({ sub: req.params.sub });
 
@@ -235,9 +237,9 @@ export const sendUserNotifications = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-}
+})
 
-export const getUserByQrCode = async (req, res) => {
+export const getUserByQrCode = asyncHandler( async (req, res) => {
   try {
     const user = await User.findOne({ qrCode: req.params.qrCode });
 
@@ -248,5 +250,4 @@ export const getUserByQrCode = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-}
-
+})
