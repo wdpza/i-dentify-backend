@@ -47,20 +47,59 @@ export const createQRCode = asyncHandler(async (req, res) => {
 });
 
 /**
+ * @description Delete a QR code
+ * @param {Object} req
+ * @param {Object} res
+ * @authentication required
+ * @route DELETE /qr/:uid
+ * @access private
+ */
+export const deleteQRCode = asyncHandler(async (req, res) => {
+  try {
+    const qrCode = await QRCode.findOneAndDelete({ uid: req.params.uid });
+
+    res.status(200).json({
+      success: true,
+      data: qrCode
+    })
+
+    console.log("QRCode deleted: ", qrCode);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}) // end deleteQRCode
+
+/**
  * @description Confirm a QR code and assign user
  * @param {Object} req
  * @param {Object} res
  *
  * @authentication required
  *
- * @route POST /qr/:uid/confirm
+ * @route POST /qr/confirm/:uid/
+ * @param {String} uid
+ * @param {String} sub
+ * @param {String} accessToken
  *
  * @returns {Object} JSON
  */
 export const confirmQRCode = asyncHandler(async (req, res) => {
   try {
-    const qrCode = await QRCode.findOne({ uid: req.params.uid });
     const { sub } = req.body;
+
+    if(!sub) {
+      return res.status(400).json({
+        success: false,
+        message: "Sub is required"
+      })
+    }
+
+    if(!req.params.uid) {
+      return res.status(400).json({
+        success: false,
+        message: "UID is required"
+      })
+    }
 
     const response = await QRCode.updateOne({ uid: req.params.uid }, {
       $set: {
@@ -150,13 +189,12 @@ export const getQRCodesBySub = asyncHandler(async (req, res) => {
  * @param   {string} req.params.uid
  * @returns {object} JSON
  * @authentication required [todo: add authentication]
- * @route PUT /qr/:uid
+ * @route PUT api/v1/qr/:uid/update
  */
 export const updateQRCode = asyncHandler(async (req, res) => {
   try {
     const qrCode = await QRCode.findOneAndUpdate({ uid: req.params.uid }, req.body, {
       new: true,
-      runValidators: true,
       data: req.body
     })
 

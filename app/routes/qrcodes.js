@@ -1,8 +1,26 @@
 import express from "express"
 
-import { getQRCode, getQRCodes, createQRCode, getQRCodesBySub, updateQRCode, confirmQRCode } from "../controllers/qrcodes.js";
+import { getQRCode, getQRCodes, createQRCode, getQRCodesBySub, updateQRCode, confirmQRCode, deleteQRCode } from "../controllers/qrcodes.js";
 
 const router = express.Router()
+
+/**
+ * @api {post} /qr/create Create qrcode
+ * @apiName createQRCode
+ * @apiGroup QRCodes
+ * @apiVersion 1.0.0
+ * @access private
+ */
+router.post("/create", createQRCode)
+
+/**
+ * @api {delete} api/v1/qr/:uid Delete user
+ * @apiName DeleteQRCode
+ * @apiGroup QRCodes
+ * @apiVersion 1.0.0
+ * @access private
+ */
+ router.delete("/:uid", deleteQRCode)
 
 /**
  * @api {get} /qr Get all qrcodes
@@ -19,10 +37,10 @@ router.get("/", getQRCodes)
  * @apiVersion 1.0.0
  * @auth true [todo: add authentication]
  */
-router.get("/sub/:sub", getQRCodesBySub)
+router.get("/:sub", getQRCodesBySub)
 
 /**
- * @api {get} /qr/:uid Get qrcode by uid
+ * @api {get} /qr/uid/:uid Get qrcode by uid
  * @apiName getQRCode
  * @apiGroup QRCodes
  * @apiVersion 1.0.0
@@ -45,7 +63,7 @@ router.post("/create", createQRCode)
  * @apiGroup QRCodes
  * @apiVersion 1.0.0
  */
-router.post("/:sub/confirm", confirmQRCode)
+router.put("/confirm/:uid", confirmQRCode)
 
 /**
  * @api {post} /qr/update Update qrcode
@@ -53,6 +71,6 @@ router.post("/:sub/confirm", confirmQRCode)
  * @apiGroup QRCodes
  * @apiVersion 1.0.0
  */
-router.post("/:uid/update", updateQRCode)
+router.put("/:uid", updateQRCode)
 
 export default router

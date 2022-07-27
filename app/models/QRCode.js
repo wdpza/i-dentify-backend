@@ -30,6 +30,7 @@ const QRCodeSchema = new mongoose.Schema({
   },
   category: {
     type: String,
+    required: true,
     default: 'private'
   },
 });

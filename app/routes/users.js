@@ -9,7 +9,7 @@ const router = express.Router()
  * @apiName CreateUser
  * @apiGroup Users
  * @apiVersion 1.0.0
- * @access private
+ * @access private todo
  */
 router.post("/create", createUser)
 
@@ -18,7 +18,7 @@ router.post("/create", createUser)
  * @apiName UpdateUser
  * @apiGroup Users
  * @apiVersion 1.0.0
- * @access private
+ * @access private todo
  */
 router.put("/:sub", updateUser)
 
@@ -26,6 +26,8 @@ router.put("/:sub", updateUser)
  * @api {delete} /users/:sub Delete user
  * @apiName DeleteUser
  * @apiGroup Users
+ * @apiVersion 1.0.0
+ * @access private todo
  */
 router.delete("/:sub", deleteUser)
 
@@ -41,7 +43,7 @@ router.delete("/:sub", deleteUser)
 router.get("/", getUsers)
 
 /**
- * @api {get} /users/:sub Get user by sub
+ * @api {get} /users/sub/:sub Get user by sub
  * @apiName GetUserBySub
  * @apiGroup Users
  * @apiVersion 1.0.0
