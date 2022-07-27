@@ -1,6 +1,6 @@
-import User from "../models/User.js";
-import asyncHandler from "express-async-handler";
-import nodemailer from "nodemailer";
+import User from "../models/User.js"
+import asyncHandler from "express-async-handler"
+import nodemailer from "nodemailer"
 
 /**
  * @api {get} /users Get all users
@@ -25,7 +25,6 @@ export const getUsers = asyncHandler( async (req, res) => {
 })
 
 /**
- * @function getUserBySub
  * @api {get} /users/:sub Get user by sub
  * @apiName GetUserBySub
  * @apiGroup Users
@@ -45,10 +44,10 @@ export const getUserBySub = asyncHandler( async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-});
+})
 
 /**
- * @api {post} /users Create user
+ * @api {post} /users/create Create user
  * @apiName CreateUser
  * @apiGroup Users
  * @apiVersion 1.0.0
@@ -90,7 +89,54 @@ export const createUser = asyncHandler(async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-});
+})
+
+/**
+ * @desc Update user
+ * @api {put} /users/:sub Update user
+ * @apiName UpdateUser
+ * @route /users/:sub
+ */
+export const updateUser = asyncHandler( async (req, res) => {
+const user = await User.findOne({ sub: req.params.sub });
+
+  if(!user) {
+    return res.status(400)
+    throw new Error("User not found");
+  }
+
+  const updatedUser = await User.findOneAndUpdate({ sub: req.params.sub }, req.body, {
+    new: true,
+  })
+
+  res.status(200).json({
+    success: true,
+    data: updatedUser
+  })
+})
+
+/**
+ * @desc Delete user
+ * @api {delete} /users/:sub Delete user
+ * @apiName DeleteUser
+ * @route /users/:sub
+ * @access private
+ */
+export const deleteUser = asyncHandler( async (req, res) => {
+  const user = await User.findOne({ sub: req.params.sub });
+
+  if(!user) {
+    return res.status(400)
+    throw new Error("User not found");
+  }
+
+  await User.findOneAndDelete({ sub: req.params.sub });
+
+  res.status(200).json({
+    success: true,
+    data: user
+  })
+})
 
 /**
  * @api {post} /users/:sub/:contactId Send SOS contact a notification
@@ -181,40 +227,7 @@ export const sendSOS = asyncHandler(async (req, res) => {
   }
 });
 
-/**
- * @api {post} /users/:sub/sos Send SOS
- */
-export const updateUser = asyncHandler( async (req, res) => {
-  try {
-    const user = await User.findOne({ qrCode: req.params.qrCode });
-
-    // Update user data if user exists and access token is correct
-    if (user && user.accessToken === req.body.accessToken) {
-      const updateUser = await User.findOneAndUpdate({ qrCode: req.params.qrCode }, req.body, { new: true });
-
-      res.status(200).json({
-        success: true,
-        data: updateUser
-      });
-    }
-    // If user exists but access token is incorrect
-    else if (user) {
-      res.status(401).json({
-        success: false,
-        message: 'Invalid access token'
-      });
-    } else {
-      res.status(404).json({
-        success: true,
-        message: 'User not found'
-      });
-    }
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-})
-
-export const sendUserNotifications = asyncHandler( async (req, res) => {
+export const sendUserNotifications = async (req, res) => {
   try {
     const user = await User.findOne({ sub: req.params.sub });
 
@@ -237,9 +250,9 @@ export const sendUserNotifications = asyncHandler( async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-})
+}
 
-export const getUserByQrCode = asyncHandler( async (req, res) => {
+export const getUserByQrCode = async (req, res) => {
   try {
     const user = await User.findOne({ qrCode: req.params.qrCode });
 
@@ -250,4 +263,5 @@ export const getUserByQrCode = asyncHandler( async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-})
+}
+

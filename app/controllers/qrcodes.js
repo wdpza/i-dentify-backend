@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from "uuid"
 
 /**
  * @description Create a QR code
+ *
  * @param {Object} req
  * @param {Object} res
  *
@@ -72,11 +73,11 @@ export const confirmQRCode = asyncHandler(async (req, res) => {
       success: true,
       data: response
     })
+
   } catch (err) {
     res.status(500).json({ message: err.message })
   }
-});
-
+})
 
 /**
  * @description Get QR code by uid
