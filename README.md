@@ -220,8 +220,5 @@ Use this space to list resources you find helpful and would like to give credit 
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com
-<<<<<<< HEAD
 [Express.js]: https://img.shields.io/badge/Express-2F00FF?style=for-the-badge&logo=express&logoColor=white
 [Express-url]: https://expressjs.com
-=======
->>>>>>> ac9a1b8d8de86a21d4686519c0805daddacc8187
