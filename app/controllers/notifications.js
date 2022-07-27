@@ -54,7 +54,7 @@ export const sendNotification = asyncHandler(async (req, res) => {
       "to": recipient.whatsapp,
       "type": "template",
       "template": {
-          "name": "hello_world",
+          "name": "identify_sos_notifications",
           "language": {
               "code": "en_US"
           }
