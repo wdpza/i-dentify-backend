@@ -58,7 +58,7 @@ mongoose.connect(CONNECTION_URL, {
   // Use jwtCheck middleware
   app.use(jwtCheck)
 
-  // Mount routes
+  // Routes
   app.use('/api/v1/qr', qrCodeRoutes)
   app.use('/api/v1/users', userRoutes)
   app.use('/api/v1/notifications', notificationRoutes)

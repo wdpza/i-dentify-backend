@@ -12,7 +12,7 @@ import axios from "axios"
  * @route POST /notifications/send
  * @access private
  */
-export const sendNotifications = asyncHandler(async (req, res) => {
+export const sendNotification = asyncHandler(async (req, res) => {
   const recipient = req.body.recipient
   const message = req.body.message
   const subject = req.body.subject
@@ -91,11 +91,10 @@ export const sendNotifications = asyncHandler(async (req, res) => {
 export const sendSOSNotifications = asyncHandler(async (req, res) => {
   const sub = req.params.sub
   const user = await User.findOne({ sub: sub })
-  const sosContacts = user.metaData.sosContacts
-  const message = req.body.message
-  const subject = req.body.subject
 
-  console.log(user)
+  const sosContacts = user.metaData.sosContacts
+  let message = req.body.message
+  const subject = 'SOS Alert!'
 
   if(!sub) {
     return res.status(400).json({
@@ -109,6 +108,15 @@ export const sendSOSNotifications = asyncHandler(async (req, res) => {
       success: false,
       message: "User not found"
     })
+  } else {
+    // verify jwt token
+    const decoded = jwt.verify(sub, process.env.JWT_SECRET)
+    if(!decoded) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid token"
+      })
+    }
   }
 
   if(!sosContacts) {
@@ -118,34 +126,37 @@ export const sendSOSNotifications = asyncHandler(async (req, res) => {
     })
   }
 
+  if(!message) {
+    message = "No info provided."
+  }
+
   // Loop through each and make call to send notification
   for(let i = 0; i < sosContacts.length; i++) {
     const contact = sosContacts[i];
+    let apiFeedback = []
 
-    let prepNumber = contact.phone.replace(/ /g,'')
-    let numberWithAreaCode = '27' + prepNumber.substring(1)
+    let prepNumber = contact.number.replace(/\D/g, '')
+    let number = '27' + prepNumber.substring(1)
 
-    axios.post(`${process.env.API_URL}notifications/send`, {
-        recipient: {
-          email: contact.email,
-          whatsapp: numberWithAreaCode
-        },
-        message: message,
-        subject: subject
-      },{
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.JWT_TOKEN}`,
+    axios.post(`${process.env.API_URL}/notifications/send`, {
+      recipient: {
+        email: contact.email,
+        whatsapp: number,
+        name: contact.name + ' ' + contact.surname
       },
+      message: message,
+      subject: subject
     }).then(response => {
-      console.log('Then:', response.data)
+      apiFeedback.push(response.data)
+      console.log(response.data)
     }).catch(error => {
-      console.log('Error:', error)
+      console.log(error)
     })
   }
 
   res.status(200).json({
     success: true,
+    messages: apiFeedback
   })
 })
 

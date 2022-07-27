@@ -1,6 +1,6 @@
 import express from "express";
 
-import { sendNotifications, sendSOSNotifications } from "../controllers/notifications.js"
+import { sendNotification, sendSOSNotifications } from "../controllers/notifications.js"
 
 const router = express.Router()
 
@@ -11,7 +11,7 @@ const router = express.Router()
  * @apiVersion 1.0.0
  * @access private
  */
-router.post("/send", sendNotifications)
+router.post("/send", sendNotification)
 
 /**
  * @api {post} /notifications/sos/:sub Send SOS contact a notification
