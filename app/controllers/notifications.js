@@ -1,6 +1,8 @@
 import Notification from "../models/Notification.js"
+import User from "../models/User.js"
 import asyncHandler from "express-async-handler"
 import nodemailer from "nodemailer"
+import axios from "axios"
 
 /**
  * @description Send a notification
@@ -45,19 +47,30 @@ export const sendNotifications = asyncHandler(async (req, res) => {
 
     /**
      * Whatsapp
-     *
-    let whatsapp = require('whatsapp-web-api');
-    let wapi = whatsapp.createInstance({
-      storage: 'memory'
-    });
-
-    wapi.initialize().then(() => {
-      wapi.sendMessage("+278344444444", "SOS Alert");
+     */
+    const url = `https://graph.facebook.com/v13.0/${process.env.WHATSAPP_NUMBER_ID}/messages`
+    const data = {
+      "messaging_product": "whatsapp",
+      "to": recipient.whatsapp,
+      "type": "template",
+      "template": {
+          "name": "hello_world",
+          "language": {
+              "code": "en_US"
+          }
+      }
     }
-    ).catch(err => {
-      console.log(err);
+
+    await axios.post(url, data, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.WHATSAPP_TOKEN}`,
+      },
+    }).then(response => {
+      console.log(response.data)
+    }).catch(error => {
+      console.log(error)
     })
-    */
 
     res.status(200).json({
       success: true,
@@ -68,4 +81,73 @@ export const sendNotifications = asyncHandler(async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 })
+
+/**
+ * @description Send SOS notification to all sos contacts
+ * @param {Object} req
+ * @param {Object} res
+ * @authentication required
+ */
+export const sendSOSNotifications = asyncHandler(async (req, res) => {
+  const sub = req.params.sub
+  const user = await User.findOne({ sub: sub })
+  const sosContacts = user.metaData.sosContacts
+  const message = req.body.message
+  const subject = req.body.subject
+
+  console.log(user)
+
+  if(!sub) {
+    return res.status(400).json({
+      success: false,
+      message: "Sub is required"
+    })
+  }
+
+  if(!user) {
+    return res.status(400).json({
+      success: false,
+      message: "User not found"
+    })
+  }
+
+  if(!sosContacts) {
+    return res.status(400).json({
+      success: false,
+      message: "No sos contacts found"
+    })
+  }
+
+  // Loop through each and make call to send notification
+  for(let i = 0; i < sosContacts.length; i++) {
+    const contact = sosContacts[i];
+
+    let prepNumber = contact.phone.replace(/ /g,'')
+    let numberWithAreaCode = '27' + prepNumber.substring(1)
+
+    axios.post(`${process.env.API_URL}notifications/send`, {
+        recipient: {
+          email: contact.email,
+          whatsapp: numberWithAreaCode
+        },
+        message: message,
+        subject: subject
+      },{
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.JWT_TOKEN}`,
+      },
+    }).then(response => {
+      console.log('Then:', response.data)
+    }).catch(error => {
+      console.log('Error:', error)
+    })
+  }
+
+  res.status(200).json({
+    success: true,
+  })
+})
+
+
 
