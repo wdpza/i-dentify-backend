@@ -25,7 +25,7 @@ var jwtCheck = expressjwt({
       jwksRequestsPerMinute: 5,
       jwksUri: 'https://dev--tglatiy.us.auth0.com/.well-known/jwks.json'
     }),
-  audience: 'https://qr-server-epr.herokuapp.com/api/v1',
+  audience: 'https://dev--tglatiy.us.auth0.com/api/v2/',
   issuer: 'https://dev--tglatiy.us.auth0.com/',
   algorithms: ['RS256']
 });
