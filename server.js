@@ -25,7 +25,7 @@ var jwtCheck = expressjwt({
       jwksRequestsPerMinute: 5,
       jwksUri: 'https://dev--tglatiy.us.auth0.com/.well-known/jwks.json'
     }),
-  audience: 'http://localhost:3000',
+  audience: 'https://qr-server-epr.herokuapp.com/api/v1',
   issuer: 'https://dev--tglatiy.us.auth0.com/',
   algorithms: ['RS256']
 });
@@ -62,6 +62,10 @@ mongoose.connect(CONNECTION_URL, {
   app.use('/api/v1/qr', qrCodeRoutes)
   app.use('/api/v1/users', userRoutes)
   app.use('/api/v1/notifications', notificationRoutes)
+
+  app.get('/authorized', function (req, res) {
+    res.send('Secured Resource');
+  });
 
   // Start server
   app.listen(PORT, () => {
