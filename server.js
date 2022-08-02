@@ -1,5 +1,4 @@
 import 'dotenv/config' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-
 import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
@@ -18,6 +17,7 @@ const PORT = process.env.PORT || 5000
 
 // Authorization middleware. When used, the Access Token must
 // exist and be verified against the Auth0 JSON Web Key Set.
+
 var jwtCheck = expressjwt({
   secret: jwks.expressJwtSecret({
       cache: true,
@@ -55,17 +55,18 @@ mongoose.connect(CONNECTION_URL, {
   app.use(bodyParser.json({ limit: '30mb', extended: true }))
   app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }))
 
+  app.use('/api/v1/qr', qrCodeRoutes)
   // Use jwtCheck middleware
   app.use(jwtCheck)
+
+  app.get('/authorized', function (req, res) {
+    res.send('Secured Resource');
+  })
 
   // Routes
   app.use('/api/v1/qr', qrCodeRoutes)
   app.use('/api/v1/users', userRoutes)
   app.use('/api/v1/notifications', notificationRoutes)
-
-  app.get('/authorized', function (req, res) {
-    res.send('Secured Resource');
-  });
 
   // Start server
   app.listen(PORT, () => {

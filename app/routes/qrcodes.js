@@ -49,15 +49,6 @@ router.get("/:sub", getQRCodesBySub)
 router.get("/uid/:uid", getQRCode)
 
 /**
- * @api {post} /qr/create Create qrcode
- * @apiName createQRCode
- * @apiGroup QRCodes
- * @apiVersion 1.0.0
- * @auth true [todo: add authentication]
- */
-router.post("/create", createQRCode)
-
-/**
  * @api {post} /qr/:sub/confirm Confirm qrcode
  * @apiName confirmQRCode
  * @apiGroup QRCodes

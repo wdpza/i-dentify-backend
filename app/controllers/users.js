@@ -114,6 +114,29 @@ const user = await User.findOne({ sub: req.params.sub });
 })
 
 /**
+ * @desc Update user SOS contacts
+ * @api {put} /users/:sub/sos Update user SOS contacts
+ * @apiName UpdateUserSOS
+ */
+export const updateUserSos = asyncHandler( async (req, res) => {
+  const user = await User.findOne({ sub: req.params.sub });
+
+  if(!user) {
+    return res.status(400)
+    throw new Error("User not found");
+  }
+
+  const updatedUser = await User.findOneAndUpdate({ sub: req.params.sub }, req.body, {
+    new: true,
+  })
+
+  res.status(200).json({
+    success: true,
+    data: updatedUser
+  })
+})
+
+/**
  * @desc Delete user
  * @api {delete} /users/:sub Delete user
  * @apiName DeleteUser

@@ -1,6 +1,6 @@
 import express from "express";
 
-import { getUsers, getUserBySub, createUser, sendSOS, updateUser, deleteUser } from "../controllers/users.js"
+import { getUsers, getUserBySub, createUser, sendSOS, updateUser, deleteUser, updateUserSos } from "../controllers/users.js"
 
 const router = express.Router()
 
@@ -9,7 +9,7 @@ const router = express.Router()
  * @apiName CreateUser
  * @apiGroup Users
  * @apiVersion 1.0.0
- * @access private todo
+ * @access private
  */
 router.post("/create", createUser)
 
@@ -18,9 +18,18 @@ router.post("/create", createUser)
  * @apiName UpdateUser
  * @apiGroup Users
  * @apiVersion 1.0.0
- * @access private todo
+ * @access private
  */
 router.put("/:sub", updateUser)
+
+/**
+ * @api {put} Update user SOS contacts
+ * @apiName UpdateUserSOS
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ * @access private
+ */
+router.put("/:sub/sos", updateUserSos)
 
 /**
  * @api {delete} /users/:sub Delete user

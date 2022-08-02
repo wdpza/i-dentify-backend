@@ -35,8 +35,8 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: 'user',
   },
-  metaData: {
-    type: Object,
+  sosContacts: {
+    type: Array,
     required: true,
   },
   notifications: {
