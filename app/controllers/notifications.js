@@ -16,6 +16,7 @@ export const sendNotification = asyncHandler(async (req, res) => {
   const recipient = req.body.recipient
   const message = req.body.message
   const subject = req.body.subject
+  const template = req.body.template
 
   try {
     /**
@@ -48,13 +49,16 @@ export const sendNotification = asyncHandler(async (req, res) => {
     /**
      * Whatsapp
      */
+    let prepNumber = recipient.whatsapp.replace(/\D/g, '')
+    let number = '27' + prepNumber.substring(1)
+
     const url = `https://graph.facebook.com/v13.0/${process.env.WHATSAPP_NUMBER_ID}/messages`
     const data = {
       "messaging_product": "whatsapp",
-      "to": recipient.whatsapp,
+      "to": number,
       "type": "template",
       "template": {
-          "name": "identify_sos_notifications",
+          "name": template,
           "language": {
               "code": "en_US"
           }
