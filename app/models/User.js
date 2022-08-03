@@ -39,6 +39,10 @@ const UserSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
+  medicalDetails: {
+    type: Array,
+    required: true,
+  },
   notifications: {
     type: Array,
     default: [],
