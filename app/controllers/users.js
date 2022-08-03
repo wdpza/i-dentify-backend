@@ -273,9 +273,15 @@ export const sendUserNotifications = async (req, res) => {
   }
 }
 
-export const getUserByQrCode = async (req, res) => {
+/**
+ * @api {get} /users/uid/:uid Get user by uid
+ * @apiName GetUserByUID
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ */
+export const getUserByUID = async (req, res) => {
   try {
-    const user = await User.findOne({ qrCode: req.params.qrCode });
+    const user = await User.findOne({ qrCode: req.params.uid });
 
     res.status(200).json({
       success: true,

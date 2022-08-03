@@ -1,6 +1,6 @@
 import express from "express";
 
-import { getUsers, getUserBySub, createUser, sendSOS, updateUser, deleteUser, updateUserSos } from "../controllers/users.js"
+import { getUsers, getUserBySub, createUser, sendSOS, updateUser, deleteUser, updateUserSos, getUserByUID } from "../controllers/users.js"
 
 const router = express.Router()
 
@@ -60,6 +60,16 @@ router.get("/", getUsers)
  * @access private
  */
 router.get("/sub/:sub", getUserBySub)
+
+/**
+ * @api {get} /users/uid/:uid Get user by uid
+ * @apiName GetUserByUid
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ * @apiSuccess {Object} user User
+ * @access private
+ */
+router.get("/uid/:uid", getUserByUID)
 
 /**
  * @api {post} /users/:sub/sos Send SOS

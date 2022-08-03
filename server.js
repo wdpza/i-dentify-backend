@@ -55,17 +55,18 @@ mongoose.connect(CONNECTION_URL, {
   app.use(bodyParser.json({ limit: '30mb', extended: true }))
   app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }))
 
-  app.use('/api/v1/qr', qrCodeRoutes)
   // Use jwtCheck middleware
+  /*
   app.use(jwtCheck)
 
   app.get('/authorized', function (req, res) {
     res.send('Secured Resource');
   })
+  */
 
   // Routes
-  app.use('/api/v1/qr', qrCodeRoutes)
   app.use('/api/v1/users', userRoutes)
+  app.use('/api/v1/qr', qrCodeRoutes)
   app.use('/api/v1/notifications', notificationRoutes)
 
   // Start server
