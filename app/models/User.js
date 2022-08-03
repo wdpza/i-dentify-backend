@@ -40,7 +40,7 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
   medicalDetails: {
-    type: Array,
+    type: Object,
     required: true,
   },
   notifications: {
