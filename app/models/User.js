@@ -1,5 +1,14 @@
 import mongoose from 'mongoose';
 
+function sosMax(val) {
+  console.log(val)
+  return val.length <= 5
+}
+
+function sosMin(val) {
+  return val.length > 0
+}
+
 // UserSchema
 const UserSchema = new mongoose.Schema({
   sub: {
@@ -37,7 +46,7 @@ const UserSchema = new mongoose.Schema({
   },
   sosContacts: {
     type: Array,
-    required: true,
+    required: true
   },
   medicalDetails: {
     type: Object,

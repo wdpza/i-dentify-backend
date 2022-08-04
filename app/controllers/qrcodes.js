@@ -131,14 +131,21 @@ export const confirmQRCode = asyncHandler(async (req, res) => {
  */
 export const getQRCode = async (req, res) => {
   try {
-    const qrCode = await QRCode.findOne({ uid: req.params.uid });
-    console.log(qrCode)
+    const qrCode = await QRCode.findOne({ uid: req.params.uid })
+
+    if(!qrCode) {
+      return res.status(404).json({
+        success: false,
+        message: "QR code not found"
+      })
+    }
+
     res.status(200).json({
       success: true,
       data: qrCode
     })
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message })
   }
 }
 

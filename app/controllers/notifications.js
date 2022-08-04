@@ -60,7 +60,7 @@ export const sendNotification = asyncHandler(async (req, res) => {
           }
       }
     }
-
+    /*
     await axios.post(url, data, {
       headers: {
         "Content-Type": "application/json",
@@ -75,6 +75,7 @@ export const sendNotification = asyncHandler(async (req, res) => {
     res.status(200).json({
       success: true,
     });
+    */
 
   }
   catch (err) {

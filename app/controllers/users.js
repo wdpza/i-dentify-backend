@@ -31,16 +31,14 @@ export const getUsers = asyncHandler( async (req, res) => {
  */
 export const getUserBySub = asyncHandler( async (req, res) => {
   try {
-    const user = await User.findOne({ sub: req.params.sub });
-
-    console.log(user)
+    const user = await User.findOne({ sub: req.params.sub })
 
     res.status(200).json({
       success: true,
       data: user
-    });
+    })
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message })
   }
 })
 
@@ -60,6 +58,20 @@ export const createUser = asyncHandler(async (req, res) => {
     });
   }
 
+  if(req.body.sosContacts.length < 1) {
+    return res.status(400).json({
+      success: false,
+      message: "At least 1 SOS contact required."
+    })
+  }
+
+  if(req.body.sosContacts.length > 5) {
+    return res.status(400).json({
+      success: false,
+      message: "SOS contacts cannot be more than 5"
+    })
+  }
+
   // Check if user exists and create if not
   try {
     const user = await User.findOne({ sub });
@@ -77,15 +89,14 @@ export const createUser = asyncHandler(async (req, res) => {
         res.status(200).json({
           success: true,
           data: user
-        });
+        })
 
-        console.log("User created: ", user);
       } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: err.message })
       }
     }
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message })
   }
 })
 
@@ -192,14 +203,14 @@ export const sendSosContactNotification = asyncHandler(async (req, res) => {
       html: "<b>SOS Alert</b>" // html body
     });
 
-    console.log("Message sent: %s", info.messageId);
+    console.log("Message sent: %s", info.messageId)
 
     res.status(200).json({
       success: true,
     });
 
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message })
   }
 })
 
@@ -210,9 +221,6 @@ export const sendSosContactNotification = asyncHandler(async (req, res) => {
  * @apiVersion 1.0.0
  */
 export const sendSOS = asyncHandler(async (req, res) => {
-
-  console.log(req.body)
-
   try {
 
     let transporter = nodemailer.createTransport({
@@ -235,16 +243,16 @@ export const sendSOS = asyncHandler(async (req, res) => {
       subject: "SOS Alert", // Subject line
       text: "SOS Alert", // plain text body
       html: "<b>SOS Alert</b>" // html body
-    });
+    })
 
-    console.log("Message sent: %s", info.messageId);
+    console.log("Message sent: %s", info.messageId)
 
     res.status(200).json({
       success: true,
     });
 
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message })
   }
 });
 
