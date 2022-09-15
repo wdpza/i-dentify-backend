@@ -1,6 +1,6 @@
 import express from "express";
 
-import { getUsers, getUserBySub, createUser, sendSOS, updateUser, deleteUser, updateUserSos, getUserByUID } from "../controllers/users.js"
+import { getUsers, getUserBySub, createUser, sendSOS, updateUser, deleteUser, updateUserMedical, getUserByUID } from "../controllers/users.js"
 
 const router = express.Router()
 
@@ -29,7 +29,7 @@ router.put("/:sub", updateUser)
  * @apiVersion 1.0.0
  * @access private
  */
-router.put("/:sub/sos", updateUserSos)
+router.put("/:sub/sos", updateUserMedical)
 
 /**
  * @api {delete} /users/:sub Delete user

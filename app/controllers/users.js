@@ -129,7 +129,7 @@ const user = await User.findOne({ sub: req.params.sub });
  * @api {put} /users/:sub/sos Update user SOS contacts
  * @apiName UpdateUserSOS
  */
-export const updateUserSos = asyncHandler( async (req, res) => {
+export const updateUserMedical = asyncHandler( async (req, res) => {
   const user = await User.findOne({ sub: req.params.sub });
 
   if(!user) {

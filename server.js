@@ -10,6 +10,7 @@ import mongoose from 'mongoose'
 import qrCodeRoutes from './app/routes/qrcodes.js'
 import userRoutes from './app/routes/users.js'
 import notificationRoutes from './app/routes/notifications.js'
+import sosContactRoutes from './app/routes/soscontacts.js'
 
 const app = express()
 const CONNECTION_URL = 'mongodb+srv://wdp:THzfTd8nGXeL2CR@merlin.zxfws.mongodb.net/qr?retryWrites=true&w=majority'
@@ -47,7 +48,6 @@ mongoose.connect(CONNECTION_URL, {
    * @returns {void}
    * @private
    */
-
   // Enable CORS
   app.use(cors())
 
@@ -67,6 +67,7 @@ mongoose.connect(CONNECTION_URL, {
   // Routes
   app.use('/api/v1/users', userRoutes)
   app.use('/api/v1/qr', qrCodeRoutes)
+  app.use('/api/v1/sos', sosContactRoutes)
   app.use('/api/v1/notifications', notificationRoutes)
 
   // Start server
